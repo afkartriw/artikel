@@ -16,17 +16,6 @@ const Navbar = () => {
     router.push("/");
   };
 
-  const getRoleBadgeStyle = (role) => {
-    switch (role) {
-      case "Admin":
-        return "bg-red-500 text-white";
-      case "User":
-        return "bg-green-500 text-white";
-      default:
-        return "bg-gray-500 text-white";
-    }
-  };
-
   return (
     <nav className="bg-indigo-600 text-white shadow-lg sticky top-0 z-50">
       <div className="px-4 sm:px-6 lg:px-8 mx-auto container">

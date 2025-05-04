@@ -167,5 +167,3 @@ const ManageCategoriesPage = () => {
     </div>
   );
 };
-
-export default ManageCategoriesPage;
