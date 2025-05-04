@@ -3,8 +3,8 @@ import { Toaster } from 'react-hot-toast';
 import './globals.css';
 
 export const metadata = {
-  title: 'Auth System',
-  description: 'Authentication system with Next.js',
+  title: 'ARTIKEL-AFKAR',
+  description: 'Website Artikel Afkar',
 };
 
 export default function RootLayout({ children }) {
