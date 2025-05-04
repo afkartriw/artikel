@@ -1,10 +1,9 @@
-// src/app/admin/categories/create/page.js
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import useAuth from '@/hooks/useAuth';
 import api from '@/utils/api';
-import { toast } from 'react-hot-toast';
+import Swal from 'sweetalert2';
 import Navbar from '@/components/Navbar';
 import Link from 'next/link';
 
@@ -21,6 +20,12 @@ const CreateCategoryPage = () => {
     // Validation
     if (!name || name.length < 3) {
       setErrors({ name: 'Nama kategori minimal 3 karakter' });
+      Swal.fire({
+        icon: 'error',
+        title: 'Validasi Gagal',
+        text: 'Nama kategori minimal 3 karakter',
+        confirmButtonColor: '#3085d6',
+      });
       return;
     }
     
@@ -28,10 +33,20 @@ const CreateCategoryPage = () => {
     
     try {
       await api.post('/categories', { name });
-      toast.success('Kategori berhasil dibuat');
+      await Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: 'Kategori berhasil dibuat',
+        confirmButtonColor: '#3085d6',
+      });
       router.push('/admin/categories');
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Gagal membuat kategori');
+      Swal.fire({
+        icon: 'error',
+        title: 'Gagal!',
+        text: error.response?.data?.message || 'Gagal membuat kategori',
+        confirmButtonColor: '#3085d6',
+      });
     } finally {
       setIsSubmitting(false);
     }

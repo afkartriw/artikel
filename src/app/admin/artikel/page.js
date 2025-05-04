@@ -8,6 +8,8 @@ import ArticleFilters from "@/components/articles/ArticleFilters";
 import ArticleTable from "@/components/articles/ArticleTable";
 import Navbar from "@/components/Navbar";
 import MenuAdmin from "@/components/MenuAdmin";
+import Swal from "sweetalert2";
+
 
 
 const ManageArticlesPage = () => {
@@ -69,11 +71,27 @@ const ManageArticlesPage = () => {
   }, [user, router, filters, pagination.page, debouncedFetchArticles]);
 
   const handleDelete = async (articleId) => {
-    if (!confirm("Are you sure you want to delete this article?")) return;
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (!result.isConfirmed) return;
 
     try {
       await api.delete(`/articles/${articleId}`);
-      toast.success("Article deleted successfully");
+      
+      // Show success message
+      Swal.fire({
+        title: "Deleted!",
+        text: "Article has been deleted.",
+        icon: "success",
+      });
 
       if (articles.length === 1 && pagination.page > 1) {
         setPagination((prev) => ({ ...prev, page: prev.page - 1 }));
@@ -83,9 +101,15 @@ const ManageArticlesPage = () => {
     } catch (error) {
       const errorMessage =
         error.response?.data?.message || "Failed to delete article";
-      toast.error(errorMessage);
+      
+      Swal.fire({
+        title: "Error!",
+        text: errorMessage,
+        icon: "error",
+      });
     }
   };
+
 
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);

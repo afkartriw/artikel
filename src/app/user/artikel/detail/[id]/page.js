@@ -163,8 +163,9 @@ const ArticleDetailPage = () => {
 
           {/* Related Articles - 1 column */}
           <div className="lg:col-span-1">
-            <div>
-              <span className="text-2xl font-bold">Related Articles</span>
+            <div className="bg-gray-50 rounded-2xl p-4 border">
+              <div className="border-b-2 text-center">
+              <span className="text-2xl font-bold">Artikel Terkait</span></div>
               <div className="space-y-4 mt-6">
                 {relatedArticles.map((rel) => (
                   <Link

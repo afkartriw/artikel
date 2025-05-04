@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { toast } from 'react-hot-toast';
+import Swal from 'sweetalert2';
 import Link from 'next/link';
 import api from '@/utils/api';
 import Navbar from '@/components/Navbar';
@@ -20,7 +20,14 @@ const EditCategoryPage = () => {
 
   useEffect(() => {
     if (!user || user.role !== 'Admin') {
-      router.push('/');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Akses Ditolak',
+        text: 'Anda tidak memiliki izin untuk mengakses halaman ini',
+        confirmButtonColor: '#3085d6',
+      }).then(() => {
+        router.push('/');
+      });
       return;
     }
 
@@ -29,8 +36,14 @@ const EditCategoryPage = () => {
         const { data } = await api.get(`/categories/${categoryId}`);
         setName(data.name);
       } catch (error) {
-        // toast.error('Kategori tidak ditemukan');
-        // router.push('/admin/categories');
+        // Swal.fire({
+        //   icon: 'error',
+        //   title: 'Gagal!',
+        //   text: 'Kategori tidak ditemukan',
+        //   confirmButtonColor: '#3085d6',
+        // }).then(() => {
+        //   router.push('/admin/categories');
+        // });
       } finally {
         setLoading(false);
       }
@@ -46,13 +59,29 @@ const EditCategoryPage = () => {
 
     try {
       await api.put(`/categories/${categoryId}`, { name });
-      toast.success('Kategori berhasil diperbarui');
+      await Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: 'Kategori berhasil diperbarui',
+        confirmButtonColor: '#3085d6',
+      });
       router.push('/admin/categories');
     } catch (error) {
       if (error.response?.data?.errors) {
         setErrors(error.response.data.errors);
+        Swal.fire({
+          icon: 'error',
+          title: 'Validasi Gagal',
+          html: Object.values(error.response.data.errors).join('<br>'),
+          confirmButtonColor: '#3085d6',
+        });
       } else {
-        toast.error('Gagal mengupdate kategori');
+        Swal.fire({
+          icon: 'error',
+          title: 'Gagal!',
+          text: 'Gagal mengupdate kategori',
+          confirmButtonColor: '#3085d6',
+        });
       }
     } finally {
       setIsSubmitting(false);

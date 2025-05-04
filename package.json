@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.0.1",
     "@tiptap/extension-image": "^2.11.9",
     "@tiptap/extension-link": "^2.11.9",
     "@tiptap/extension-placeholder": "^2.11.9",
@@ -22,8 +23,11 @@
     "react": "^19.1.0",
     "react-datepicker": "^8.3.0",
     "react-dom": "^19.1.0",
+    "react-hook-form": "^7.56.2",
     "react-hot-toast": "^2.5.2",
-    "use-debounce": "^10.0.4"
+    "sweetalert2": "^11.21.0",
+    "use-debounce": "^10.0.4",
+    "zod": "^3.24.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

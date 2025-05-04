@@ -7,6 +7,7 @@ import RichTextEditor from "@/components/articles/RichTextEditor";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import ArticlePreview from "@/components/articles/ArticlePreview";
+import Swal from "sweetalert2";
 
 const CreateArticlePage = () => {
   const router = useRouter();
@@ -27,7 +28,12 @@ const CreateArticlePage = () => {
         const { data } = await api.get("/categories");
         setCategories(data.data || []);
       } catch (error) {
-        toast.error("Failed to load categories");
+        Swal.fire({
+          title: "Error!",
+          text: "Gagal memuat kategori",
+          icon: "error",
+          confirmButtonColor: "#3085d6",
+        });
       }
     };
     fetchCategories();
@@ -50,12 +56,22 @@ const CreateArticlePage = () => {
 
     // Validasi file
     if (file.size > 2 * 1024 * 1024) {
-      toast.error("Ukuran gambar terlalu besar (maksimal 2MB)");
+      Swal.fire({
+        title: "Ukuran gambar terlalu besar",
+        text: "Maksimal 2MB",
+        icon: "warning",
+        confirmButtonColor: "#3085d6",
+      });
       return;
     }
 
     if (!file.type.match("image.*")) {
-      toast.error("Hanya file gambar yang diizinkan");
+      Swal.fire({
+        title: "Format tidak didukung",
+        text: "Hanya file gambar yang diizinkan",
+        icon: "warning",
+        confirmButtonColor: "#3085d6",
+      });
       return;
     }
 
@@ -79,7 +95,12 @@ const CreateArticlePage = () => {
 
   const handlePreview = () => {
     if (!validateForm()) {
-      toast.error("Periksa kembali inputan Anda");
+      Swal.fire({
+        title: "Form tidak valid",
+        text: "Periksa kembali inputan Anda",
+        icon: "warning",
+        confirmButtonColor: "#3085d6",
+      });
       return;
     }
     setShowPreview(true);
@@ -88,9 +109,27 @@ const CreateArticlePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) {
-      toast.error("Periksa kembali inputan Anda");
+      Swal.fire({
+        title: "Form tidak valid",
+        text: "Periksa kembali inputan Anda",
+        icon: "warning",
+        confirmButtonColor: "#3085d6",
+      });
       return;
     }
+
+    const result = await Swal.fire({
+      title: "Simpan Artikel?",
+      text: "Anda yakin ingin menyimpan artikel ini?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Ya, Simpan!",
+      cancelButtonText: "Batal",
+    });
+
+    if (!result.isConfirmed) return;
 
     setIsSubmitting(true);
     try {
@@ -117,15 +156,27 @@ const CreateArticlePage = () => {
       };
 
       await api.post("/articles", payload);
-      toast.success("Artikel berhasil dibuat");
+      
+      await Swal.fire({
+        title: "Berhasil!",
+        text: "Artikel berhasil dibuat",
+        icon: "success",
+        confirmButtonColor: "#3085d6",
+      });
+      
       router.push("/admin/artikel");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Gagal membuat artikel");
+      await Swal.fire({
+        title: "Gagal!",
+        text: error.response?.data?.message || "Gagal membuat artikel",
+        icon: "error",
+        confirmButtonColor: "#3085d6",
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
-
+  
   return (
     <>
       <Navbar />
@@ -232,7 +283,6 @@ const CreateArticlePage = () => {
                       value={formData.content}
                       onChange={handleContentChange}
                       placeholder="Tulis konten artikel di sini..."
-                      error={errors.content}
                     />
                     {errors.content && (
                       <p className="text-sm text-red-500 mt-1">

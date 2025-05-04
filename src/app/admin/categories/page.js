@@ -8,6 +8,8 @@ import Navbar from "@/components/Navbar";
 import { Plus } from "lucide-react";
 import CategoriesTable from "@/components/categories/CategoriesTable";
 import MenuAdmin from "@/components/MenuAdmin";
+import Swal from "sweetalert2";
+
 
 const ManageCategoriesPage = () => {
   const { user } = useAuth();
@@ -70,21 +72,53 @@ const ManageCategoriesPage = () => {
   }, [filters.search, allCategories]);
 
   const handleDelete = async (categoryId) => {
-    if (
-      !confirm(
-        "Delete this category? Articles in this category will be uncategorized."
-      )
-    )
-      return;
-
+    const result = await Swal.fire({
+      title: "Delete Category?",
+      html: "<span style='color:#f8bb86'>Warning:</span> Articles in this category will become uncategorized.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+      focusCancel: true,
+      backdrop: `
+        rgba(0,0,0,0.7)
+        url("/images/nyan-cat.gif")
+        left top
+        no-repeat
+      `
+    });
+  
+    if (!result.isConfirmed) return;
+  
     try {
       await api.delete(`/categories/${categoryId}`);
-      toast.success("Category deleted");
+      
+      Swal.fire({
+        title: "Deleted!",
+        text: "Category has been deleted.",
+        icon: "success",
+        timer: 1500,
+        timerProgressBar: true,
+        showConfirmButton: false
+      });
+      
       fetchData(pagination.page);
     } catch (error) {
-      toast.error(
-        "Delete failed. Make sure no articles are using this category."
-      );
+      Swal.fire({
+        title: "Delete Failed!",
+        html: `
+          <div>
+            <p>Make sure no articles are using this category.</p>
+            ${error.response?.data?.message ? 
+              `<p class="error-detail">${error.response.data.message}</p>` : ''}
+          </div>
+        `,
+        icon: "error",
+        confirmButtonText: "OK",
+        scrollbarPadding: false
+      });
     }
   };
 
@@ -167,3 +201,5 @@ const ManageCategoriesPage = () => {
     </div>
   );
 };
+
+export default ManageCategoriesPage;

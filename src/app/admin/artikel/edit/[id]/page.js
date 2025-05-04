@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import api from '@/utils/api';
-import { toast } from 'react-hot-toast';
+import Swal from 'sweetalert2';
 import RichTextEditor from '@/components/articles/RichTextEditor';
 import Navbar from '@/components/Navbar';
 import Link from 'next/link';
@@ -40,8 +40,14 @@ const EditArticlePage = () => {
         const { data: categoriesData } = await api.get('/categories');
         setCategories(categoriesData.data || []);
       } catch (error) {
-        toast.error('Gagal memuat data artikel');
-        router.push('/admin/artikel');
+        Swal.fire({
+          title: 'Gagal!',
+          text: 'Gagal memuat data artikel',
+          icon: 'error',
+          confirmButtonColor: '#3085d6',
+        }).then(() => {
+          router.push('/admin/artikel');
+        });
       } finally {
         setIsLoading(false);
       }
@@ -72,12 +78,22 @@ const EditArticlePage = () => {
 
     // Validasi file
     if (file.size > 2 * 1024 * 1024) {
-      toast.error('Ukuran gambar terlalu besar (maksimal 2MB)');
+      Swal.fire({
+        title: 'Ukuran gambar terlalu besar',
+        text: 'Maksimal 2MB',
+        icon: 'warning',
+        confirmButtonColor: '#3085d6',
+      });
       return;
     }
 
     if (!file.type.match('image.*')) {
-      toast.error('Hanya file gambar yang diizinkan');
+      Swal.fire({
+        title: 'Format tidak didukung',
+        text: 'Hanya file gambar yang diizinkan',
+        icon: 'warning',
+        confirmButtonColor: '#3085d6',
+      });
       return;
     }
 
@@ -102,7 +118,12 @@ const EditArticlePage = () => {
 
   const handlePreview = () => {
     if (!validateForm()) {
-      toast.error('Periksa kembali inputan Anda');
+      Swal.fire({
+        title: 'Form tidak valid',
+        text: 'Periksa kembali inputan Anda',
+        icon: 'warning',
+        confirmButtonColor: '#3085d6',
+      });
       return;
     }
     setShowPreview(true);
@@ -111,9 +132,27 @@ const EditArticlePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) {
-      toast.error('Periksa kembali inputan Anda');
+      Swal.fire({
+        title: 'Form tidak valid',
+        text: 'Periksa kembali inputan Anda',
+        icon: 'warning',
+        confirmButtonColor: '#3085d6',
+      });
       return;
     }
+
+    const result = await Swal.fire({
+      title: 'Perbarui Artikel?',
+      text: 'Anda yakin ingin menyimpan perubahan artikel ini?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya, Simpan!',
+      cancelButtonText: 'Batal',
+    });
+
+    if (!result.isConfirmed) return;
 
     setIsSubmitting(true);
 
@@ -142,12 +181,25 @@ const EditArticlePage = () => {
       };
 
       await api.put(`/articles/${id}`, payload);
-      toast.success('Artikel berhasil diperbarui');
+      
+      await Swal.fire({
+        title: 'Berhasil!',
+        text: 'Artikel berhasil diperbarui',
+        icon: 'success',
+        confirmButtonColor: '#3085d6',
+      });
+      
       router.push('/admin/artikel');
     } catch (error) {
       console.error('Update error:', error);
       const errorMessage = error.response?.data?.message || 'Gagal memperbarui artikel';
-      toast.error(errorMessage);
+      
+      await Swal.fire({
+        title: 'Gagal!',
+        text: errorMessage,
+        icon: 'error',
+        confirmButtonColor: '#3085d6',
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -267,7 +319,6 @@ const EditArticlePage = () => {
                       value={formData.content}
                       onChange={handleContentChange}
                       placeholder="Tulis konten artikel di sini..."
-                      error={errors.content}
                     />
                     {errors.content && (
                       <p className="text-sm text-red-500 mt-1">{errors.content}</p>

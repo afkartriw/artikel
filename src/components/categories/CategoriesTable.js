@@ -2,6 +2,8 @@
 import { Pencil, Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
+import Swal from "sweetalert2";
+
 
 const CategoriesTable = ({
   categories,
@@ -14,12 +16,67 @@ const CategoriesTable = ({
   const router = useRouter();
 
   const handleDelete = async (categoryId) => {
-    if (!confirm('Delete this category? Articles in this category will be uncategorized.')) return;
+    const result = await Swal.fire({
+      title: 'Delete Category?',
+      html: `
+        <div>
+          <p>Are you sure you want to delete this category?</p>
+          <p style="color: #f8bb86; font-weight: 500;">
+            <i class="fas fa-exclamation-triangle"></i> 
+            Articles in this category will become uncategorized.
+          </p>
+        </div>
+      `,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Delete',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true,
+      focusConfirm: false,
+      focusCancel: true,
+      customClass: {
+        popup: 'custom-swal-popup',
+        title: 'custom-swal-title',
+        htmlContainer: 'custom-swal-html',
+        confirmButton: 'custom-swal-confirm',
+        cancelButton: 'custom-swal-cancel'
+      }
+    });
+  
+    if (!result.isConfirmed) return;
+  
     try {
       await onDelete(categoryId);
-      toast.success('Category deleted');
+      
+      await Swal.fire({
+        title: 'Deleted!',
+        text: 'Category has been deleted successfully.',
+        icon: 'success',
+        timer: 2000,
+        timerProgressBar: true,
+        showConfirmButton: false
+      });
     } catch (error) {
-      toast.error('Delete failed. Make sure no articles are using this category.');
+      await Swal.fire({
+        title: 'Error!',
+        html: `
+          <div>
+            <p>Failed to delete category.</p>
+            <p style="color: #f8bb86; margin-top: 10px;">
+              <i class="fas fa-info-circle"></i>
+              Make sure no articles are using this category.
+            </p>
+            ${error.response?.data?.message ? 
+              `<p class="error-detail" style="color: #ff6b6b; margin-top: 5px;">
+                ${error.response.data.message}
+              </p>` : ''}
+          </div>
+        `,
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
     }
   };
 
