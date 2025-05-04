@@ -58,7 +58,7 @@ const CreateCategoryPage = () => {
     <>
       <Navbar />
       <div
-        className="min-h-screen py-10 px-4 bg-gray-100"
+        className="h-screen overflow-hidden py-10 px-4 bg-gray-100"
         style={{
           backgroundImage: 'url("https://sso.uns.ac.id/module.php/uns/img/symphony.png")',
           backgroundRepeat: 'repeat',

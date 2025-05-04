@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 const RegisterPage = () => {
   return (
     <div
-      className="min-h-screen bg-repeat"
+      className="h-screen overflow-hidden bg-repeat"
       style={{
         backgroundImage:
           'url("https://sso.uns.ac.id/module.php/uns/img/symphony.png")',
