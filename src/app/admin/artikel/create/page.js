@@ -54,7 +54,7 @@ const CreateArticlePage = () => {
       return;
     }
 
-    if (!file.type.match('image.*')) {
+    if (!file.type.match("image.*")) {
       toast.error("Hanya file gambar yang diizinkan");
       return;
     }
@@ -95,17 +95,17 @@ const CreateArticlePage = () => {
     setIsSubmitting(true);
     try {
       let imageUrl = null;
-      
+
       if (selectedImage) {
         const formData = new FormData();
-        formData.append('image', selectedImage);
-        
-        const uploadResponse = await api.post('/upload', formData, {
+        formData.append("image", selectedImage);
+
+        const uploadResponse = await api.post("/upload", formData, {
           headers: {
-            'Content-Type': 'multipart/form-data',
+            "Content-Type": "multipart/form-data",
           },
         });
-        
+
         imageUrl = uploadResponse.data.imageUrl;
       }
 
@@ -115,8 +115,8 @@ const CreateArticlePage = () => {
         categoryId: formData.categoryId,
         ...(imageUrl && { imageUrl }),
       };
-      
-      await api.post('/articles', payload);
+
+      await api.post("/articles", payload);
       toast.success("Artikel berhasil dibuat");
       router.push("/admin/artikel");
     } catch (error) {
@@ -127,7 +127,10 @@ const CreateArticlePage = () => {
   };
 
   const getCategoryName = () => {
-    return categories.find(cat => cat.id === formData.categoryId)?.name || "Uncategorized";
+    return (
+      categories.find((cat) => cat.id === formData.categoryId)?.name ||
+      "Uncategorized"
+    );
   };
 
   return (
@@ -137,10 +140,11 @@ const CreateArticlePage = () => {
         <div
           className="w-full min-h-screen px-4 py-8 bg-repeat"
           style={{
-            backgroundImage: 'url("https://sso.uns.ac.id/module.php/uns/img/symphony.png")',
+            backgroundImage:
+              'url("https://sso.uns.ac.id/module.php/uns/img/symphony.png")',
           }}
         >
-          <div className="bg-white mx-20 my-10 rounded-2xl border-gray-300 border-2">
+          <div className="bg-white sm:mx-10 lg:mx-20 my-6 sm:my-10 rounded-2xl border-gray-300 border-2 max-w-7xl mx-auto">
             <div className="flex justify-center items-center py-4 border-b border-gray-300">
               <p className="text-3xl font-bold">Preview Artikel</p>
             </div>
@@ -148,15 +152,16 @@ const CreateArticlePage = () => {
             <div className="lg:col-span-2 bg-gray-100 rounded-b-2xl shadow pt-4">
               <img
                 src={
-                  selectedImage ? URL.createObjectURL(selectedImage) :
-                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfPV3mMYlF-fb8Z8ClaWUc8DoqS6J612gEZQ&s"
+                  selectedImage
+                    ? URL.createObjectURL(selectedImage)
+                    : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfPV3mMYlF-fb8Z8ClaWUc8DoqS6J612gEZQ&s"
                 }
                 alt="Article thumbnail"
                 onError={(e) => {
                   e.target.src =
                     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfPV3mMYlF-fb8Z8ClaWUc8DoqS6J612gEZQ&s";
                 }}
-                className="w-full h-64 lg:h-[350px] object-cover rounded-2xl mb-4 mx-auto"
+                className="w-full aspect-[16/9] object-cover rounded-2xl mb-4"
               />
               <div className="p-6">
                 <div className="mb-4 text-sm text-gray-500">
@@ -230,7 +235,7 @@ const CreateArticlePage = () => {
         </div>
       ) : (
         <div
-          className="min-h-screen py-10 px-4 bg-gray-100"
+          className="min-h-screen py-6 sm:py-10 px-4 sm:px-6 bg-gray-100"
           style={{
             backgroundImage:
               'url("https://sso.uns.ac.id/module.php/uns/img/symphony.png")',
@@ -239,7 +244,7 @@ const CreateArticlePage = () => {
         >
           <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-md overflow-hidden border border-gray-200">
             <div className="px-6 py-5">
-              <p className="text-3xl font-bold text-gray-800">Tambah Artikel</p>
+              <p className="text-3xl font-bold text-blue-800">TAMBAH ARTIKEL</p>
             </div>
             <form onSubmit={handleSubmit}>
               <div className="border-y border-gray-200 px-6 py-4 space-y-6">
@@ -259,11 +264,13 @@ const CreateArticlePage = () => {
                       }`}
                     />
                     {errors.title && (
-                      <p className="text-sm text-red-500 mt-1">{errors.title}</p>
+                      <p className="text-sm text-red-500 mt-1">
+                        {errors.title}
+                      </p>
                     )}
                   </div>
-    
-                  <div>
+
+                  <div className="col-span-2 md:col-span-1">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Kategori
                     </label>
@@ -283,11 +290,13 @@ const CreateArticlePage = () => {
                       ))}
                     </select>
                     {errors.categoryId && (
-                      <p className="text-sm text-red-500 mt-1">{errors.categoryId}</p>
+                      <p className="text-sm text-red-500 mt-1">
+                        {errors.categoryId}
+                      </p>
                     )}
                   </div>
-    
-                  <div>
+
+                  <div className="col-span-2 md:col-span-1">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Gambar Utama
                     </label>
@@ -307,7 +316,7 @@ const CreateArticlePage = () => {
                       </div>
                     )}
                   </div>
-    
+
                   <div className="col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Konten Artikel
@@ -319,7 +328,9 @@ const CreateArticlePage = () => {
                       error={errors.content}
                     />
                     {errors.content && (
-                      <p className="text-sm text-red-500 mt-1">{errors.content}</p>
+                      <p className="text-sm text-red-500 mt-1">
+                        {errors.content}
+                      </p>
                     )}
                   </div>
                 </div>

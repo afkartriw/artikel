@@ -7,6 +7,8 @@ import { toast } from "react-hot-toast";
 import ArticleFilters from "@/components/articles/ArticleFilters";
 import ArticleTable from "@/components/articles/ArticleTable";
 import Navbar from "@/components/Navbar";
+import MenuAdmin from "@/components/MenuAdmin";
+
 
 const ManageArticlesPage = () => {
   const { user } = useAuth();
@@ -23,7 +25,6 @@ const ManageArticlesPage = () => {
     category: "",
   });
 
-  // Debounce function to prevent too many API calls while typing
   const debounce = (func, delay) => {
     let timer;
     return (...args) => {
@@ -55,7 +56,6 @@ const ManageArticlesPage = () => {
     }
   }, [filters, pagination.page, pagination.limit]);
 
-  // Debounced version of fetchArticles
   const debouncedFetchArticles = useCallback(debounce(fetchArticles, 500), [
     fetchArticles,
   ]);
@@ -81,7 +81,6 @@ const ManageArticlesPage = () => {
         fetchArticles();
       }
     } catch (error) {
-      console.error("Delete error:", error);
       const errorMessage =
         error.response?.data?.message || "Failed to delete article";
       toast.error(errorMessage);
@@ -96,20 +95,26 @@ const ManageArticlesPage = () => {
   if (!user || user.role !== "Admin") return null;
 
   return (
-    <div className="bg-repeat min-h-screen" style={{
-      backgroundImage: 'url("https://sso.uns.ac.id/module.php/uns/img/symphony.png")',
-    }}>
+    <div
+      className="bg-repeat min-h-screen pb-4"
+      style={{
+        backgroundImage:
+          'url("https://sso.uns.ac.id/module.php/uns/img/symphony.png")',
+      }}
+    >
       <Navbar />
-      <div className="bg-white container mx-auto mt-10 border-2 border-gray-300 rounded-2xl">
-        <div className="flex justify-center items-center px-6 py-4">
-          <p className="text-3xl font-bold">TABEL ARTIKEL</p>
-
+      <MenuAdmin />
+      <div className="bg-white container mx-auto mt-4 border-2 border-gray-300 rounded-2xl py-6">
+        <div className="flex flex-col  sm:items-center text-center px-2 py-4">
+          <p className="text-2xl sm:text-3xl font-bold text-blue-800 mb-2 sm:mb-0">
+            TABEL ARTIKEL
+          </p>
         </div>
 
         <ArticleFilters
           filters={filters}
           onChange={handleFilterChange}
-          autoApply // Add this prop to indicate filters should be applied automatically
+          autoApply
         />
 
         <ArticleTable
@@ -122,43 +127,43 @@ const ManageArticlesPage = () => {
 
         {/* Pagination Controls */}
         {pagination.total > 0 && (
-          <div className="flex justify-between items-center py-4 px-6">
-            <div>
-              Showing {(pagination.page - 1) * pagination.limit + 1}-
-              {Math.min(pagination.page * pagination.limit, pagination.total)}{" "}
-              of {pagination.total}
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 py-4 px-2 sm:px-6">
+            <div className="text-sm sm:text-base text-center sm:text-left">
+              Menampilkan {(pagination.page - 1) * pagination.limit + 1}-
+              {Math.min(pagination.page * pagination.limit, pagination.total)} dari{" "}
+              {pagination.total} artikel
             </div>
-            <div className="flex space-x-2 items-center">
+            <div className="flex flex-wrap justify-center gap-2">
               <button
                 disabled={pagination.page <= 1}
                 onClick={() =>
                   setPagination((prev) => ({ ...prev, page: prev.page - 1 }))
                 }
-                className="px-3 py-1 border rounded disabled:opacity-50 cursor-pointer"
+                className="px-3 py-1 border rounded disabled:opacity-50"
               >
                 Previous
               </button>
 
-              {[
-                ...Array(
-                  Math.max(1, Math.ceil(pagination.total / pagination.limit))
-                ).keys(),
-              ].map((i) => {
-                const page = i + 1;
-                return (
-                  <button
-                    key={page}
-                    onClick={() => setPagination((prev) => ({ ...prev, page }))}
-                    className={`px-3 py-1 border rounded cursor-pointer ${
-                      pagination.page === page
-                        ? "bg-blue-600 text-white"
-                        : "hover:bg-gray-200"
-                    }`}
-                  >
-                    {page}
-                  </button>
-                );
-              })}
+              {[...Array(Math.ceil(pagination.total / pagination.limit)).keys()].map(
+                (i) => {
+                  const page = i + 1;
+                  return (
+                    <button
+                      key={page}
+                      onClick={() =>
+                        setPagination((prev) => ({ ...prev, page }))
+                      }
+                      className={`px-3 py-1 border rounded ${
+                        pagination.page === page
+                          ? "bg-blue-600 text-white"
+                          : "hover:bg-gray-200"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  );
+                }
+              )}
 
               <button
                 disabled={
@@ -168,7 +173,7 @@ const ManageArticlesPage = () => {
                 onClick={() =>
                   setPagination((prev) => ({ ...prev, page: prev.page + 1 }))
                 }
-                className="px-3 py-1 border rounded disabled:opacity-50 cursor-pointer"
+                className="px-3 py-1 border rounded disabled:opacity-50"
               >
                 Next
               </button>

@@ -51,7 +51,7 @@ const CreateCategoryPage = () => {
       >
         <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-md overflow-hidden border border-gray-200">
           <div className="px-6 py-5">
-            <p className="text-3xl font-bold text-gray-800">Tambah Kategori</p>
+            <p className="text-3xl font-bold text-blue-800">TAMBAH KATEGORI</p>
           </div>
           
           <form onSubmit={handleSubmit}>

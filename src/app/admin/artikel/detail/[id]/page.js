@@ -58,87 +58,86 @@ const ArticleDetailPage = () => {
   style={{
     backgroundImage: 'url("https://sso.uns.ac.id/module.php/uns/img/symphony.png")',
   }}
-> <div className="bg-white mx-20 my-10 rounded-2xl border-gray-300 border-2">
-      <div className="flex justify-center items-center py-4 border-b border-gray-300">
-        <p className="text-3xl font-bold">Detail Artikel</p>
-      </div>
+>
+  <div className="bg-white max-w-screen-lg mx-auto my-10 rounded-2xl border-gray-300 border-2">
+    <div className="flex justify-center items-center py-4 border-b border-gray-300">
+      <p className="text-2xl sm:text-3xl font-bold text-center">Detail Artikel</p>
+    </div>
 
-      {/* Custom Styled Article Card */}
-      <div className="lg:col-span-2 bg-gray-100 rounded-b-2xl shadow pt-4">
-        <img
-          src={
-            article.imageUrl ||
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfPV3mMYlF-fb8Z8ClaWUc8DoqS6J612gEZQ&s"
-          }
-          alt="Article thumbnail"
-          onError={(e) => {
-            e.target.src =
-              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfPV3mMYlF-fb8Z8ClaWUc8DoqS6J612gEZQ&s";
-          }}
-          className="w-full h-64 lg:h-[350px] object-cover rounded-2xl mb-4"
-        />
-        <div className="p-6">
-          <div className="mb-4 text-sm text-gray-500">
-            <div className="flex justify-between items-start">
-              <div>
-                <div className="flex items-center">
-                  <CalendarDays size={16} className="mr-1" />
-                  {new Date(article.createdAt).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                  })}
-                </div>
-                <div className="text-xs text-gray-400">
-                  Updated:{" "}
-                  {new Date(article.updatedAt).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                  })}
-                </div>
+    <div className="bg-gray-100 rounded-b-2xl shadow pt-4">
+      <img
+        src={
+          article.imageUrl ||
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfPV3mMYlF-fb8Z8ClaWUc8DoqS6J612gEZQ&s"
+        }
+        alt="Article thumbnail"
+        onError={(e) => {
+          e.target.src =
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfPV3mMYlF-fb8Z8ClaWUc8DoqS6J612gEZQ&s";
+        }}
+        className="w-full h-48 sm:h-64 lg:h-[350px] object-cover rounded-2xl mb-4"
+      />
+      <div className="p-4 sm:p-6">
+        <div className="mb-4 text-sm text-gray-500">
+          <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center gap-2">
+            <div>
+              <div className="flex items-center">
+                <CalendarDays size={16} className="mr-1" />
+                {new Date(article.createdAt).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })}
               </div>
-              <div>
-                <span className="inline-block bg-blue-200 text-blue-800 text-xs px-2 py-1 rounded-full uppercase font-semibold tracking-wide">
-                  {article.category?.name || "Uncategorized"}
-                </span>
+              <div className="text-xs text-gray-400">
+                Updated:{" "}
+                {new Date(article.updatedAt).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })}
               </div>
             </div>
-          </div>
-
-          <h2 className="text-2xl font-bold mb-4">{article.title}</h2>
-
-          <div
-            className="prose max-w-none border-y-2 border-dashed border-gray-300 py-4"
-            dangerouslySetInnerHTML={{ __html: article.content }}
-          />
-
-          <div className="mt-8 border-gray-200">
-            <span className="font-bold mb-4">Penulis :</span>
-            <div className="flex items-center mt-2">
-              <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center mr-3">
-                {article.user?.username?.charAt(0).toUpperCase()}
-              </div>
-              <div className="flex flex-col">
-                <span className="font-medium">{article.user?.username}</span>
-                <span className="text-sm text-gray-500 capitalize">
-                  {article.user?.role?.toLowerCase()}
-                </span>
-              </div>
+            <div>
+              <span className="inline-block bg-blue-200 text-blue-800 text-xs px-2 py-1 rounded-full uppercase font-semibold tracking-wide">
+                {article.category?.name || "Uncategorized"}
+              </span>
             </div>
-          </div>
-
-          <div className="mt-8">
-            <Link
-              href="/admin/artikel"
-              className="text-blue-600 hover:underline"
-            >
-              &larr; Kembali ke tabel artikel
-            </Link>
           </div>
         </div>
+
+        <h2 className="text-xl sm:text-2xl font-bold mb-4">{article.title}</h2>
+
+        <div
+          className="prose max-w-none border-y-2 border-dashed border-gray-300 py-4 text-justify"
+          dangerouslySetInnerHTML={{ __html: article.content }}
+        />
+
+        <div className="mt-8 border-gray-200">
+          <span className="font-bold mb-2 block">Penulis :</span>
+          <div className="flex items-center mt-2">
+            <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center mr-3 text-lg font-semibold">
+              {article.user?.username?.charAt(0).toUpperCase()}
+            </div>
+            <div className="flex flex-col">
+              <span className="font-medium">{article.user?.username}</span>
+              <span className="text-sm text-gray-500 capitalize">
+                {article.user?.role?.toLowerCase()}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-8">
+          <Link href="/admin/artikel" className="text-blue-600 hover:underline">
+            &larr; Kembali ke tabel artikel
+          </Link>
+        </div>
       </div>
-    </div></div>
+    </div>
+  </div>
+</div>
+
   );
 };
 

@@ -1,167 +1,128 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import useAuth from '@/hooks/useAuth';
-import api from '@/utils/api';
 import { toast } from 'react-hot-toast';
 import Link from 'next/link';
+import api from '@/utils/api';
+import Navbar from '@/components/Navbar';
+import useAuth from '@/hooks/useAuth';
 
 const EditCategoryPage = () => {
-  const { id } = useParams();
-  const router = useRouter();
   const { user } = useAuth();
-  const [formData, setFormData] = useState({
-    name: '',
-  });
+  const router = useRouter();
+  const params = useParams();
+  const categoryId = params?.id;
+
+  const [name, setName] = useState('');
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
-  // Check auth and fetch category data
   useEffect(() => {
-    if (user?.role !== 'Admin') {
+    if (!user || user.role !== 'Admin') {
       router.push('/');
       return;
     }
 
     const fetchCategory = async () => {
       try {
-        setIsLoading(true);
-        const { data } = await api.get(`/categories/${id}`);
-        setFormData({
-          name: data.data.name,
-        });
+        const { data } = await api.get(`/categories/${categoryId}`);
+        setName(data.name);
       } catch (error) {
-        toast.error('Failed to fetch category data');
-        console.error('Error:', error);
-        router.push('/admin/categories');
+        // toast.error('Kategori tidak ditemukan');
+        // router.push('/admin/categories');
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
     };
 
-    fetchCategory();
-  }, [id, user, router]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-    
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    }
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-    if (!formData.name.trim()) {
-      newErrors.name = 'Category name is required';
-    } else if (formData.name.trim().length < 3) {
-      newErrors.name = 'Category name must be at least 3 characters';
-    }
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+    if (categoryId) fetchCategory();
+  }, [categoryId, user, router]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateForm()) {
-      return;
-    }
-
     setIsSubmitting(true);
+    setErrors({});
 
     try {
-      const payload = {
-        name: formData.name,
-      };
-
-      const { data } = await api.put(`/categories/${id}`, payload);
-
-      toast.success('Category updated successfully');
+      await api.put(`/categories/${categoryId}`, { name });
+      toast.success('Kategori berhasil diperbarui');
       router.push('/admin/categories');
     } catch (error) {
-      console.error('Update error:', error.response?.data || error);
-      
-      const errorMessage = error.response?.data?.message || 
-                         'Failed to update category. It may be in use by articles.';
-      toast.error(errorMessage);
+      if (error.response?.data?.errors) {
+        setErrors(error.response.data.errors);
+      } else {
+        toast.error('Gagal mengupdate kategori');
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (!user || user.role !== 'Admin') return null;
-
-  if (isLoading) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-        </div>
-      </div>
-    );
+  if (loading) {
+    return <div className="text-center mt-10 text-gray-700">Memuat data kategori...</div>;
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Edit Category</h1>
-        <Link
-          href="/admin/categories"
-          className="text-gray-600 hover:text-gray-800"
-        >
-          Back to Categories
-        </Link>
-      </div>
+    <>
+      <Navbar />
+      <div
+        className="min-h-screen py-10 px-4 bg-gray-100"
+        style={{
+          backgroundImage: 'url("https://sso.uns.ac.id/module.php/uns/img/symphony.png")',
+          backgroundRepeat: 'repeat',
+        }}
+      >
+        <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-md overflow-hidden border border-gray-200">
+          <div className="px-6 py-5">
+            <p className="text-3xl font-bold text-blue-800">EDIT KATEGORI</p>
+          </div>
 
-      <div className="bg-white shadow-md rounded-lg p-6">
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-              Category Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
-                errors.name ? 'border-red-500' : 'border-gray-300'
-              }`}
-              placeholder="Enter category name"
-            />
-            {errors.name && (
-              <p className="mt-1 text-sm text-red-600">{errors.name}</p>
-            )}
-          </div>
-          
-          <div className="flex justify-end space-x-3">
-            <button
-              type="button"
-              onClick={() => router.push('/admin/categories')}
-              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className={`px-4 py-2 rounded-md text-white ${
-                isSubmitting ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'
-              }`}
-            >
-              {isSubmitting ? 'Updating...' : 'Update Category'}
-            </button>
-          </div>
-        </form>
+          <form onSubmit={handleSubmit}>
+            <div className="border-y border-gray-200 px-6 py-4 space-y-6">
+              <div className="grid grid-cols-1 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Nama Kategori
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Masukkan nama kategori"
+                    value={name}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                      if (errors.name) setErrors({});
+                    }}
+                    className={`w-full p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 ${
+                      errors.name ? 'border-red-500' : 'border-gray-300'
+                    }`}
+                  />
+                  {errors.name && (
+                    <p className="text-sm text-red-500 mt-1">{errors.name}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-between items-center border-gray-200 px-6 py-4">
+              <Link
+                href="/admin/categories"
+                className="inline-flex items-center px-4 py-2 bg-gray-500 hover:bg-gray-700 text-white rounded-md transition"
+              >
+                Kembali
+              </Link>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition disabled:opacity-50 cursor-pointer"
+              >
+                {isSubmitting ? 'Menyimpan...' : 'Simpan'}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
