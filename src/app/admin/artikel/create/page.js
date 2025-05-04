@@ -292,27 +292,27 @@ const CreateArticlePage = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex justify-between items-center border-gray-200 px-6 py-4">
+              <div className="flex flex-col sm:flex-row justify-between items-center gap-4 border-t border-gray-200 px-4 sm:px-6 py-4">
                 <Link
                   href="/admin/artikel"
-                  className="inline-flex items-center px-4 py-2 bg-gray-500 hover:bg-gray-700 text-white rounded-md transition"
+                  className="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 bg-gray-500 hover:bg-gray-700 text-white rounded-md transition"
                 >
                   Kembali
                 </Link>
-                <div className="space-x-3">
+                <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                   <button
                     type="button"
                     onClick={handlePreview}
-                    className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition"
+                    className="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition"
                   >
                     Preview
                   </button>
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition disabled:opacity-50 cursor-pointer"
+                    className="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition disabled:opacity-50"
                   >
-                    {isSubmitting ? "Menyimpan..." : "Simpan"}
+                    {isSubmitting ? 'Menyimpan...' : 'Simpan'}
                   </button>
                 </div>
               </div>

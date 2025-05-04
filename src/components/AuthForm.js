@@ -44,7 +44,7 @@ const AuthForm = ({ type, isAdminRegister = false }) => {
       if (type === "login") {
         result = await login(data.username, data.password);
       } else {
-        result =     await authRegister(           
+        result = await authRegister(           
           data.username,
           data.password,
           isAdminRegister ? "Admin" : "User"
@@ -55,9 +55,10 @@ const AuthForm = ({ type, isAdminRegister = false }) => {
         toast.success(
           type === "login" ? "Login berhasil!" : "Registrasi berhasil!"
         );
-        if (type === "register" && !isAdminRegister) {
+      
+        if (type === "register") {
           router.push("/");
-        }
+        }            
       } else {
         setServerError(result.message || "Terjadi kesalahan");
       }

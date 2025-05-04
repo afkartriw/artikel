@@ -98,21 +98,22 @@ const ArticlePreview = ({
               </div>
             </div>
 
-            <div className="mt-8 flex justify-between">
-              <button
-                onClick={onBackToEdit}
-                className="inline-flex items-center px-4 py-2 bg-gray-500 hover:bg-gray-700 text-white rounded-md transition"
-              >
-                Kembali ke Edit
-              </button>
-              <button
-                onClick={onSubmit}
-                disabled={isSubmitting}
-                className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition disabled:opacity-50 cursor-pointer"
-              >
-                {isSubmitting ? "Menyimpan..." : "Simpan Artikel"}
-              </button>
-            </div>
+            <div className="mt-8 flex flex-col md:flex-row justify-between gap-4">
+  <button
+    onClick={onBackToEdit}
+    className="w-full md:w-auto inline-flex justify-center items-center px-4 py-2 bg-gray-500 hover:bg-gray-700 text-white rounded-md transition"
+  >
+    Kembali
+  </button>
+  <button
+    onClick={onSubmit}
+    disabled={isSubmitting}
+    className="w-full md:w-auto inline-flex justify-center items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition disabled:opacity-50 cursor-pointer"
+  >
+    {isSubmitting ? "Menyimpan..." : "Simpan"}
+  </button>
+</div>
+
           </div>
         </div>
       </div>

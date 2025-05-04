@@ -346,7 +346,7 @@ const EditArticlePage = () => {
                     disabled={isSubmitting}
                     className="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition disabled:opacity-50"
                   >
-                    {isSubmitting ? 'Menyimpan...' : 'Simpan Perubahan'}
+                    {isSubmitting ? 'Menyimpan...' : 'Simpan'}
                   </button>
                 </div>
               </div>
