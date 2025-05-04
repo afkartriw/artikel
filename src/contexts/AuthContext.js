@@ -11,31 +11,38 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (token) {
-          // Set token ke header jika belum otomatis diset
-          api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  
-          // Ambil data profil pengguna
-          const { data: profileData } = await api.get("/auth/profile");
-          setUser({
-            username: profileData.username,
-            role: profileData.role,
-          });
-        }
-      } catch (error) {
-        console.error("Auth check failed:", error);
-        logout();
-      } finally {
+useEffect(() => {
+  const checkAuth = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
         setLoading(false);
+        return;
       }
-    };
-  
+
+      // Set token ke header axios
+      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+      // Verifikasi token dan ambil profil
+      const { data: profileData } = await api.get("/auth/profile");
+      setUser({
+        username: profileData.username,
+        role: profileData.role,
+      });
+    } catch (error) {
+      console.error("Auth check failed:", error);
+      localStorage.removeItem("token");
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Pastikan ini hanya berjalan di client side
+  if (typeof window !== "undefined") {
     checkAuth();
-  }, []);
+  }
+}, []);
   
 
   const login = async (username, password) => {

@@ -72,10 +72,17 @@ const ArticleDetailPage = () => {
   return (
     <>
       <Navbar />
+      <div
+      className="w-full min-h-screen px-4 py-8 bg-repeat"
+      style={{
+        backgroundImage:
+          'url("https://sso.uns.ac.id/module.php/uns/img/symphony.png")',
+      }}
+    >
       <div className="px-4 sm:px-6 lg:px-8 mx-auto container py-8"> 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Article - spans 3 columns */}
-          <div className="lg:col-span-2 bg-gray-100 rounded-2xl shadow">
+          <div className="lg:col-span-2 bg-white rounded-2xl shadow">
             <img
               src={
                 article.imageUrl ||
@@ -218,7 +225,7 @@ const ArticleDetailPage = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div></div>
     </>
   );
 };

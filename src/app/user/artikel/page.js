@@ -73,10 +73,10 @@ const ManageArticlesPage = () => {
   }, []);
 
   useEffect(() => {
-    if (user?.role !== "User") {
-      router.push("/");
-      return;
-    }
+    // if (user?.role !== "User") {
+    //   router.push("/");
+    //   return;
+    // }
     fetchCategories();
     debouncedFetchArticles();
   }, [
@@ -100,6 +100,13 @@ const ManageArticlesPage = () => {
   return (
 <>
   <Navbar />
+  <div
+      className="w-full min-h-screen px-4 py-8 bg-repeat"
+      style={{
+        backgroundImage:
+          'url("https://sso.uns.ac.id/module.php/uns/img/symphony.png")',
+      }}
+    >
   <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
     <div className="mb-6">
       {/* Judul */}
@@ -134,7 +141,7 @@ const ManageArticlesPage = () => {
             name="category"
             value={filters.category}
             onChange={handleFilterChange}
-            className="px-3 py-2 border rounded-md min-w-[150px] text-sm"
+            className="px-3 py-2 border rounded-md min-w-[150px] text-sm bg-white"
             disabled={categoriesLoading}
           >
             <option value="">Kategori</option>
@@ -151,8 +158,8 @@ const ManageArticlesPage = () => {
             name="title"
             value={filters.title}
             onChange={handleFilterChange}
-            placeholder="Cari judul"
-            className="px-3 py-2 border rounded-md min-w-[200px] text-sm"
+            placeholder="Cari judul...."
+            className="px-3 py-2 border rounded-md min-w-[200px] text-sm bg-white"
           />
         </div>
       </div>
@@ -219,7 +226,7 @@ const ManageArticlesPage = () => {
         </div>
       </div>
     )}
-  </div>
+  </div></div>
 </>
 
   );

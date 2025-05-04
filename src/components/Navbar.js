@@ -127,7 +127,7 @@ const Navbar = () => {
 
       {/* Mobile menu - Show/hide based on menu state */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-indigo-700">
+        <div className="md:hidden border-t-2">
           <div className="px-2 space-y-1 sm:px-3">
             {user ? (
               <>
@@ -153,8 +153,8 @@ const Navbar = () => {
             )}
           </div>
           {user && (
-            <div className="pt-4 pb-3 border-t border-indigo-800">
-              <div className="flex items-center px-5">
+            <div className="pt-4 pb-3 ">
+              <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden">
                     <img
@@ -171,7 +171,7 @@ const Navbar = () => {
                   </div>
                 </div>
               </div>
-              <div className="mt-3 px-5">
+              <div className="mt-3">
                 <button
                   onClick={() => {
                     handleLogout();

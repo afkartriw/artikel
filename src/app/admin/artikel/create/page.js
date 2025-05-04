@@ -6,7 +6,7 @@ import { toast } from "react-hot-toast";
 import RichTextEditor from "@/components/articles/RichTextEditor";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
-import { CalendarDays } from "lucide-react"; // Import the CalendarDays icon
+import ArticlePreview from "@/components/articles/ArticlePreview";
 
 const CreateArticlePage = () => {
   const router = useRouter();
@@ -126,113 +126,20 @@ const CreateArticlePage = () => {
     }
   };
 
-  const getCategoryName = () => {
-    return (
-      categories.find((cat) => cat.id === formData.categoryId)?.name ||
-      "Uncategorized"
-    );
-  };
-
   return (
     <>
       <Navbar />
       {showPreview ? (
-        <div
-          className="w-full min-h-screen px-4 py-8 bg-repeat"
-          style={{
-            backgroundImage:
-              'url("https://sso.uns.ac.id/module.php/uns/img/symphony.png")',
-          }}
-        >
-          <div className="bg-white sm:mx-10 lg:mx-20 my-6 sm:my-10 rounded-2xl border-gray-300 border-2 max-w-7xl mx-auto">
-            <div className="flex justify-center items-center py-4 border-b border-gray-300">
-              <p className="text-3xl font-bold">Preview Artikel</p>
-            </div>
-
-            <div className="lg:col-span-2 bg-gray-100 rounded-b-2xl shadow pt-4">
-              <img
-                src={
-                  selectedImage
-                    ? URL.createObjectURL(selectedImage)
-                    : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfPV3mMYlF-fb8Z8ClaWUc8DoqS6J612gEZQ&s"
-                }
-                alt="Article thumbnail"
-                onError={(e) => {
-                  e.target.src =
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfPV3mMYlF-fb8Z8ClaWUc8DoqS6J612gEZQ&s";
-                }}
-                className="w-full aspect-[16/9] object-cover rounded-2xl mb-4"
-              />
-              <div className="p-6">
-                <div className="mb-4 text-sm text-gray-500">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <div className="flex items-center">
-                        <CalendarDays size={16} className="mr-1" />
-                        {new Date().toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        })}
-                      </div>
-                      <div className="text-xs text-gray-400">
-                        Updated:{" "}
-                        {new Date().toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        })}
-                      </div>
-                    </div>
-                    <div>
-                      <span className="inline-block bg-blue-200 text-blue-800 text-xs px-2 py-1 rounded-full uppercase font-semibold tracking-wide">
-                        {getCategoryName()}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <h2 className="text-2xl font-bold mb-4">{formData.title}</h2>
-
-                <div
-                  className="prose max-w-none border-y-2 border-dashed border-gray-300 py-4"
-                  dangerouslySetInnerHTML={{ __html: formData.content }}
-                />
-
-                <div className="mt-8 border-gray-200">
-                  <span className="font-bold mb-4">Penulis :</span>
-                  <div className="flex items-center mt-2">
-                    <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center mr-3">
-                      {"Y".toUpperCase()}
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="font-medium">You</span>
-                      <span className="text-sm text-gray-500 capitalize">
-                        admin
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-8 flex justify-between">
-                  <button
-                    onClick={() => setShowPreview(false)}
-                    className="inline-flex items-center px-4 py-2 bg-gray-500 hover:bg-gray-700 text-white rounded-md transition"
-                  >
-                    Kembali ke Edit
-                  </button>
-                  <button
-                    onClick={handleSubmit}
-                    disabled={isSubmitting}
-                    className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition disabled:opacity-50 cursor-pointer"
-                  >
-                    {isSubmitting ? "Menyimpan..." : "Simpan Artikel"}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ArticlePreview
+          title={formData.title}
+          content={formData.content}
+          categoryId={formData.categoryId}
+          categories={categories}
+          selectedImage={selectedImage}
+          onBackToEdit={() => setShowPreview(false)}
+          onSubmit={handleSubmit}
+          isSubmitting={isSubmitting}
+        />
       ) : (
         <div
           className="min-h-screen py-6 sm:py-10 px-4 sm:px-6 bg-gray-100"

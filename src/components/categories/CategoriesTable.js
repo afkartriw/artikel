@@ -9,6 +9,7 @@ const CategoriesTable = ({
   pagination,
   onDelete,
   onPageChange,
+  searchTerm,
 }) => {
   const router = useRouter();
 
@@ -26,6 +27,13 @@ const CategoriesTable = ({
     return <div className="text-center py-8">Loading categories...</div>;
   }
 
+  // Calculate displayed items based on search term
+  const displayedCategories = searchTerm
+    ? categories.filter(category =>
+        category.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : categories;
+
   return (
     <div className="px-4 py-4 sm:px-6">
       {/* Desktop Table */}
@@ -41,14 +49,14 @@ const CategoriesTable = ({
             </tr>
           </thead>
           <tbody>
-            {categories.length === 0 ? (
+            {displayedCategories.length === 0 ? (
               <tr>
                 <td colSpan="5" className="text-center py-4 text-gray-500">
-                  {filters.search ? 'No matching categories found' : 'Belum ada kategori'}
+                  {searchTerm ? 'No matching categories found' : 'Belum ada kategori'}
                 </td>
               </tr>
             ) : (
-              categories.map((category, index) => (
+              displayedCategories.map((category, index) => (
                 <tr key={category.id} className="hover:bg-gray-100 text-center">
                   <td className="p-2 border border-gray-300">
                     {(pagination.page - 1) * pagination.limit + index + 1}
@@ -86,12 +94,12 @@ const CategoriesTable = ({
 
       {/* Mobile Card View */}
       <div className="md:hidden space-y-4">
-        {categories.length === 0 ? (
+        {displayedCategories.length === 0 ? (
           <div className="text-center py-4 text-gray-500">
-            {filters.search ? 'No matching categories found' : 'Belum ada kategori'}
+            {searchTerm ? 'No matching categories found' : 'Belum ada kategori'}
           </div>
         ) : (
-          categories.map((category, index) => (
+          displayedCategories.map((category, index) => (
             <div
               key={category.id}
               className="border rounded-lg shadow-sm p-4 bg-white"
@@ -130,8 +138,8 @@ const CategoriesTable = ({
         )}
       </div>
 
-      {/* Pagination Controls */}
-      {pagination.total > 0 && (
+      {/* Pagination Controls - Only show if not searching */}
+      {!searchTerm && pagination.total > 0 && (
         <div className="flex flex-col sm:flex-row justify-between items-center py-4 px-6 gap-4">
           <div className="text-sm text-gray-600">
             Menampilkan {(pagination.page - 1) * pagination.limit + 1} -{" "}

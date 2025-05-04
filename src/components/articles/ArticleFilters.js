@@ -37,7 +37,6 @@ const ArticleFilters = ({ filters, onChange, autoApply }) => {
   return (
     <div className="bg-white px-4 sm:px-6 py-4 border-y-2 border-gray-300">
       <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4">
-        
         {/* Kiri: Tombol Tambah Artikel */}
         <div className="md:w-auto w-full">
           <button
@@ -45,10 +44,13 @@ const ArticleFilters = ({ filters, onChange, autoApply }) => {
             className="flex items-center gap-2 bg-green-600 text-white font-semibold px-4 py-2 rounded hover:bg-green-700 w-full md:w-auto justify-center md:justify-start"
           >
             <Plus size={18} />
-            TAMBAH ARTIKEL
+            {/* Mobile & lg+ : TAMBAH ARTIKEL */}
+            <span className="block md:hidden lg:block">TAMBAH ARTIKEL</span>
+            {/* md only : TAMBAH */}
+            <span className="hidden md:block lg:hidden">TAMBAH</span>
           </button>
         </div>
-  
+
         {/* Kanan: Filter */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-end gap-4 w-full md:w-auto">
           {/* Tombol All */}
@@ -67,9 +69,9 @@ const ArticleFilters = ({ filters, onChange, autoApply }) => {
           >
             All
           </button>
-  
+
           {/* Filter Kategori */}
-          <div className="w-full md:w-64">
+          <div className="w-full md:w-56">
             <select
               name="category"
               value={filters.category}
@@ -85,9 +87,9 @@ const ArticleFilters = ({ filters, onChange, autoApply }) => {
               ))}
             </select>
           </div>
-  
+
           {/* Filter Judul */}
-          <div className="w-full md:w-64">
+          <div className="w-full md:w-56">
             <input
               type="text"
               name="title"
@@ -101,7 +103,6 @@ const ArticleFilters = ({ filters, onChange, autoApply }) => {
       </div>
     </div>
   );
-  
 };
 
 export default ArticleFilters;

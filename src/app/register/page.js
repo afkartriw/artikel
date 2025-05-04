@@ -1,4 +1,5 @@
 import AuthForm from "@/components/AuthForm";
+import Navbar from "@/components/Navbar";
 
 const RegisterPage = () => {
   return (
@@ -8,7 +9,7 @@ const RegisterPage = () => {
         backgroundImage:
           'url("https://sso.uns.ac.id/module.php/uns/img/symphony.png")',
       }}
-    >
+    > <Navbar />
       <AuthForm type="register" />;
     </div>
   );

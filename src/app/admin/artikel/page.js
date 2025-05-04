@@ -61,10 +61,10 @@ const ManageArticlesPage = () => {
   ]);
 
   useEffect(() => {
-    if (user?.role !== "Admin") {
-      router.push("/");
-      return;
-    }
+    // if (user?.role !== "Admin") {
+    //   router.push("/");
+    //   return;
+    // }
     debouncedFetchArticles();
   }, [user, router, filters, pagination.page, debouncedFetchArticles]);
 
@@ -101,10 +101,11 @@ const ManageArticlesPage = () => {
         backgroundImage:
           'url("https://sso.uns.ac.id/module.php/uns/img/symphony.png")',
       }}
-    >
-      <Navbar />
+    >          <Navbar />
+   <div className="px-4 sm:px-6 lg:px-8 mx-auto container">
+
       <MenuAdmin />
-      <div className="bg-white container mx-auto mt-4 border-2 border-gray-300 rounded-2xl py-6">
+      <div className="bg-white container mx-auto mt-4 border-2 border-gray-300 rounded-2xl">
         <div className="flex flex-col  sm:items-center text-center px-2 py-4">
           <p className="text-2xl sm:text-3xl font-bold text-blue-800 mb-2 sm:mb-0">
             TABEL ARTIKEL
@@ -180,7 +181,7 @@ const ManageArticlesPage = () => {
             </div>
           </div>
         )}
-      </div>
+      </div></div>
     </div>
   );
 };

@@ -45,7 +45,7 @@ const AuthForm = ({ type, isAdminRegister = false }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="flex items-center justify-center pt-16 p-4">
       <div className="w-full max-w-md mx-auto p-6 bg-white shadow-md border-2 border-gray-300 rounded-2xl">
         <p className="text-2xl font-bold mb-6 text-center">
           {isAdminRegister

@@ -20,7 +20,7 @@ const MenuAdmin = () => {
   ];
 
   return (
-    <div className="container mx-auto mt-10">
+    <div className="container mx-auto mt-8">
       <div className="flex flex-col md:flex-row gap-4 md:gap-6">
         {menuItems.map((item) => {
           const isActive = pathname === item.href;
