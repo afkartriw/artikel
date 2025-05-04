@@ -19,17 +19,17 @@ const EditCategoryPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user || user.role !== 'Admin') {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Akses Ditolak',
-        text: 'Anda tidak memiliki izin untuk mengakses halaman ini',
-        confirmButtonColor: '#3085d6',
-      }).then(() => {
-        router.push('/');
-      });
-      return;
-    }
+    // if (!user || user.role !== 'Admin') {
+    //   Swal.fire({
+    //     icon: 'warning',
+    //     title: 'Akses Ditolak',
+    //     text: 'Anda tidak memiliki izin untuk mengakses halaman ini',
+    //     confirmButtonColor: '#3085d6',
+    //   }).then(() => {
+    //     router.push('/');
+    //   });
+    //   return;
+    // }
 
     const fetchCategory = async () => {
       try {
