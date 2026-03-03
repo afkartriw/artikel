@@ -6,7 +6,7 @@ import api from '@/utils/api';
 import Swal from 'sweetalert2';
 import Navbar from '@/components/Navbar';
 import Link from 'next/link';
-
+pp
 const CreateCategoryPage = () => {
   const { user } = useAuth();
   const router = useRouter();
